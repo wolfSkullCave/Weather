@@ -1,4 +1,4 @@
-export async function fetchWeatherData(key, location) {
+export async function getWeatherData(key, location) {
   let url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(location)}?unitGroup=metric&key=${key}&contentType=json`;
 
   try {
@@ -7,15 +7,14 @@ export async function fetchWeatherData(key, location) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const data = await response.json();
-    console.log(`Current weather in ${location}:`, data.currentConditions);
+    // console.log(`Current weather in ${location}:`, data.currentConditions);
     return data;
   } catch (e) {
     console.error("Error fetching weather data:", e);
   }
 }
 
-
-export function addWidget(key, location) {
+export function initWeatherWidget(key, location) {
   window.weatherWidgetConfig = window.weatherWidgetConfig || [];
   window.weatherWidgetConfig.push({
     selector: ".weatherWidget",
@@ -29,6 +28,7 @@ export function addWidget(key, location) {
   });
 
   (function () {
+    // render weather widget
     var d = document,
       s = d.createElement("script");
     s.src =
