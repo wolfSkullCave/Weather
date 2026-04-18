@@ -19,6 +19,11 @@ body {
 
 .weather-details__row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 40px 1fr 1fr 1fr 1fr;
   margin-bottom: 1rem;
+  align-items: center;
+}
+
+img.weather-details__icon {
+  width: 30px;
 }

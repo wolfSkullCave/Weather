@@ -3,47 +3,70 @@ import { initWeatherWidget, getWeatherData, getWeather } from "./weather-api";
 
 const key = "WHNN7SGBSX9BJL6W9RJ9AGVEV";
 let location = "Cape Town, South Africa";
-
+const celciusSymbol = "°C";
+// This tells Webpack to include ALL svgs from that folder in the build
+const iconContext = require.context("./assets/icons", false, /\.svg$/);
 // Test function
-if (!localStorage.getItem("weatherData")) {
-  localStorage.setItem("weatherData", JSON.stringify(data));
-}
-const storedData = localStorage.getItem("weatherData");
-if (storedData) {
-  const weatherData = JSON.parse(storedData);
-  renderWeatherForecast(weatherData);
-} else {
+
+// get data from API and/or local storage
+const weatherData = JSON.parse(localStorage.getItem("weatherData"));
+
+if (!weatherData) {
   getWeatherData(key, location).then((data) => {
-    // console.log("sample data: ", data);
-    // initWeatherWidget(key, location);
-    // renderForecast(data);
-    renderWeatherForecast(data);
+    console.log("data:", data);
+    localStorage.setItem("weatherData", JSON.stringify(data));
   });
 }
+
+// console.log("weather data:", weatherData);
+
+// render weather data for today
+
+// render weather data for this week
+const forcast_week = getWeeklyForecast(weatherData);
+// console.log("Upcoming week:", forcast_week);
+
+renderWeatherForecast(forcast_week);
+
+// if (!localStorage.getItem("weatherData")) {
+//   localStorage.setItem("weatherData", JSON.stringify(data));
+// }
+// const storedData = localStorage.getItem("weatherData");
+// if (storedData) {
+//   const weatherData = JSON.parse(storedData);
+//   renderWeatherForecast(weatherData);
+// } else {
+//   getWeatherData(key, location).then((data) => {
+//     // console.log("sample data: ", data);
+//     // initWeatherWidget(key, location);
+//     // renderForecast(data);
+//     renderWeatherForecast(data);
+//   });
+// }
 // END of tests
 
-function renderForecast(data) {
+function renderForecast(week) {
   const div = document.querySelector(".weather-details");
   const grid = createGridDiv(div);
 
   for (let i = 0; i < 8; i++) {
-    createPara(formatDate(data.days[i].datetime), grid);
+    createPara(formatDate(week.days[i].datetime), grid);
 
-    const temp = `${data.days[i].temp}°C`;
+    const temp = `${week.days[i].temp}°C`;
     createPara(temp, grid);
 
     const icon = document.createElement("i");
-    const iconClass = "wi icon wi-forecast-io-" + data.days[i].icon;
+    const iconClass = "wi icon wi-forecast-io-" + week.days[i].icon;
     icon.classList.add(...iconClass.trim().split(/\s+/));
     grid.appendChild(icon);
 
     // hours
-    const morning = data.days[i].hours[8].icon;
-    const afternoon = data.days[i].hours[12].icon;
-    const evening = data.days[i].hours[18].icon;
-    const night = data.days[i].hours[20].icon;
+    const morning = week.days[i].hours[8].icon;
+    const afternoon = week.days[i].hours[12].icon;
+    const evening = week.days[i].hours[18].icon;
+    const night = week.days[i].hours[20].icon;
 
-    createPara(data.days[i].description, grid);
+    createPara(week.days[i].description, grid);
   }
 }
 
@@ -89,25 +112,27 @@ function createGridDiv(parent) {
   return grid;
 }
 
-async function renderWeatherForecast(data) {
-  const template = document.getElementById("template-weather-details");
-  const container = document.querySelector(".forecast");
+async function renderWeatherForecast(weeklyForecast) {
+  console.log("weelky forecast:", weeklyForecast);
 
-  // const data = await getWeatherData(key, location);
-  console.log("render forecast data:", data);
+  const grid = document.getElementById("weatherWeek");
+  const template = document.getElementById("weekDetails");
 
-  // get data for the template
-  const upcomingWeek = getWeeklyForecast(data);
+  weeklyForecast.forEach((day) => {
+    // Clone template content
+    const clone = template.content.cloneNode(true);
 
-  // renderTemplate
-}
+    // Update clone's elements
+    clone.querySelector(".weather-details__date").textContent = day.date;
+    clone.querySelector(".weather-details__temp").textContent =
+      `${day.temperature.highest}${celciusSymbol}/${day.temperature.lowest}${celciusSymbol}`;
+    clone.querySelector(".weather-details__phases").textContent =
+      `${day.phases.morning}${celciusSymbol}/${day.phases.afternoon}${celciusSymbol}/${day.phases.evening}${celciusSymbol}/${day.phases.night}${celciusSymbol}`;
+    clone.querySelector(".weather-details__rain").textContent = day.rain;
+    clone.querySelector(".weather-details__icon").src =
+      `assets/icons/${day.icon}.svg`;
 
-function renderWeeklyForecast(weekArr) {
-  weekArr.forEach((day) => {
-    // Clone the content of the template
-    // The 'true' argument ensures a deep clone (includes all nested elements)
-    // Fill the clone with data
-    // Append the clone to the page
+    grid.appendChild(clone);
   });
 }
 
@@ -133,6 +158,6 @@ function getWeeklyForecast(data) {
     };
     forecastedDays.push(dayDetails);
   }
-  console.log("forcast days", forecastedDays);
-  return dayDetails;
+  // console.log("forcast days", forecastedDays);
+  return forecastedDays;
 }
