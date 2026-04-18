@@ -125,10 +125,11 @@ async function renderWeatherForecast(weeklyForecast) {
     // Update clone's elements
     clone.querySelector(".weather-details__date").textContent = day.date;
     clone.querySelector(".weather-details__temp").textContent =
-      `${day.temperature.highest}${celciusSymbol}/${day.temperature.lowest}${celciusSymbol}`;
+      `Highest: ${day.temperature.highest}${celciusSymbol} / Lowest: ${day.temperature.lowest}${celciusSymbol}`;
     clone.querySelector(".weather-details__phases").textContent =
-      `${day.phases.morning}${celciusSymbol}/${day.phases.afternoon}${celciusSymbol}/${day.phases.evening}${celciusSymbol}/${day.phases.night}${celciusSymbol}`;
-    clone.querySelector(".weather-details__rain").textContent = day.rain;
+      `Morning: ${day.phases.morning}${celciusSymbol} / Afternoon: ${day.phases.afternoon}${celciusSymbol} / Evening: ${day.phases.evening}${celciusSymbol} / Night: ${day.phases.night}${celciusSymbol}`;
+    clone.querySelector(".weather-details__rain").textContent =
+      `Chance of rain: ${day.rain}`;
     clone.querySelector(".weather-details__icon").src =
       `assets/icons/${day.icon}.svg`;
 
