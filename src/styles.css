@@ -22,8 +22,13 @@ body {
   grid-template-columns: 40px 1fr 1fr 2fr 1fr;
   margin-bottom: 1rem;
   align-items: center;
+  gap: 2rem;
 }
 
 img.weather-details__icon {
   width: 30px;
+}
+
+h3.locationTitle {
+  text-transform: capitalize;
 }

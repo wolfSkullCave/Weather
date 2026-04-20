@@ -4,46 +4,55 @@ import { initWeatherWidget, getWeatherData, getWeather } from "./weather-api";
 const key = "WHNN7SGBSX9BJL6W9RJ9AGVEV";
 let location = "Cape Town, South Africa";
 const celciusSymbol = "°C";
+
 // This tells Webpack to include ALL svgs from that folder in the build
 const iconContext = require.context("./assets/icons", false, /\.svg$/);
-// Test function
 
-// get data from API and/or local storage
-const weatherData = JSON.parse(localStorage.getItem("weatherData"));
+async function main(key, location) {
+  // get data from API and/or local storage
+  let weatherData = JSON.parse(localStorage.getItem("weatherData"));
+  const now = Date.now();
+  const oneHour = 3600000; // 1 hour in milliseconds
 
-if (!weatherData) {
-  getWeatherData(key, location).then((data) => {
-    console.log("data:", data);
-    localStorage.setItem("weatherData", JSON.stringify(data));
-  });
+  // Check if data exists and is less than 1 hour old
+  const isDataFresh =
+    weatherData &&
+    now - weatherData.currentConditions.datetimeEpoch * 1000 < oneHour;
+
+  if (!isDataFresh) {
+    weatherData = await getWeatherData(key, location);
+    localStorage.setItem("weatherData", JSON.stringify(weatherData));
+  }
+
+  // render weather data for this week
+  const forcast_week = getWeeklyForecast(weatherData);
+  // console.log("Upcoming week:", forcast_week);
+
+  renderWeatherForecast(forcast_week);
 }
 
-// console.log("weather data:", weatherData);
+document
+  .getElementById("location-btn")
+  .addEventListener("click", async (event) => {
+    // renders weather detailed view based on search results
+    event.preventDefault();
+    const location = document.getElementById("location-input").value;
 
-// render weather data for today
+    document.querySelector(".locationTitle").textContent = location;
+    await main(key, location);
+  });
 
-// render weather data for this week
-const forcast_week = getWeeklyForecast(weatherData);
-// console.log("Upcoming week:", forcast_week);
+document
+  .getElementById("location-input")
+  .addEventListener("keydown", async (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      const location = document.getElementById("location-input").value;
 
-renderWeatherForecast(forcast_week);
-
-// if (!localStorage.getItem("weatherData")) {
-//   localStorage.setItem("weatherData", JSON.stringify(data));
-// }
-// const storedData = localStorage.getItem("weatherData");
-// if (storedData) {
-//   const weatherData = JSON.parse(storedData);
-//   renderWeatherForecast(weatherData);
-// } else {
-//   getWeatherData(key, location).then((data) => {
-//     // console.log("sample data: ", data);
-//     // initWeatherWidget(key, location);
-//     // renderForecast(data);
-//     renderWeatherForecast(data);
-//   });
-// }
-// END of tests
+      document.querySelector(".locationTitle").textContent = location;
+      await main(key, location);
+    }
+  });
 
 function renderForecast(week) {
   const div = document.querySelector(".weather-details");
@@ -69,16 +78,6 @@ function renderForecast(week) {
     createPara(week.days[i].description, grid);
   }
 }
-
-document.getElementById("location-btn").addEventListener("click", (event) => {
-  // renders weather detailed view based on search results
-  event.preventDefault();
-  const location = document.getElementById("location-input").value;
-  initWeatherWidget(key, location);
-  getWeatherData(key, location).then((data) => {
-    renderForecast(data);
-  });
-});
 
 function createPara(value, parent) {
   // creates a p tag for use in dom
@@ -113,10 +112,12 @@ function createGridDiv(parent) {
 }
 
 async function renderWeatherForecast(weeklyForecast) {
-  console.log("weelky forecast:", weeklyForecast);
+  // console.log("weelky forecast:", weeklyForecast);
 
   const grid = document.getElementById("weatherWeek");
   const template = document.getElementById("weekDetails");
+
+  grid.innerHTML = "";
 
   weeklyForecast.forEach((day) => {
     // Clone template content
