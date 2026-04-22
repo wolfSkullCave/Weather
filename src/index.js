@@ -9,7 +9,7 @@ const celciusSymbol = "°C";
 // This tells Webpack to include ALL svgs from that folder in the build
 const iconContext = require.context("./assets/icons", false, /\.svg$/);
 
-testData();
+// testData();
 
 async function testData() {
   let testData = localStorage.getItem("testData");
