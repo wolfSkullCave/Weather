@@ -1,30 +1,37 @@
-import "./styles.css";
+import "./styles2.css";
+// import "./styles3.css";
 import { initWeatherWidget, getWeatherData, getWeather } from "./weather-api";
 
 const key = "WHNN7SGBSX9BJL6W9RJ9AGVEV";
-let location = "Cape Town, South Africa";
+
 const celciusSymbol = "°C";
 
 // This tells Webpack to include ALL svgs from that folder in the build
 const iconContext = require.context("./assets/icons", false, /\.svg$/);
 
-async function main(key, location) {
-  // get data from API and/or local storage
-  let weatherData = JSON.parse(localStorage.getItem("weatherData"));
-  const now = Date.now();
-  const oneHour = 3600000; // 1 hour in milliseconds
+testData();
 
-  // Check if data exists and is less than 1 hour old
-  const isDataFresh =
-    weatherData &&
-    now - weatherData.currentConditions.datetimeEpoch * 1000 < oneHour;
+async function testData() {
+  let testData = localStorage.getItem("testData");
 
-  if (!isDataFresh) {
-    weatherData = await getWeatherData(key, location);
-    localStorage.setItem("weatherData", JSON.stringify(weatherData));
+  if (!testData) {
+    testData = await getWeatherData(key, "cape town");
+    localStorage.setItem("testData", JSON.stringify(testData));
   }
 
+  testData = JSON.parse(testData);
+  const forcastWeek = getWeeklyForecast(testData);
+  renderWeatherForecast(forcastWeek);
+  document.querySelector(".locationTitle").textContent = "Cape Town";
+
+  console.log(testData);
+}
+
+async function main(key, location) {
   // render weather data for this week
+  const weatherData = await getWeatherData(key, location);
+  // console.log(weatherData);
+
   const forcast_week = getWeeklyForecast(weatherData);
   // console.log("Upcoming week:", forcast_week);
 
@@ -40,6 +47,9 @@ document
 
     document.querySelector(".locationTitle").textContent = location;
     await main(key, location);
+
+    // cleanup search input
+    document.getElementById("location-input").value = "";
   });
 
 document
@@ -51,6 +61,9 @@ document
 
       document.querySelector(".locationTitle").textContent = location;
       await main(key, location);
+
+      // cleanup search input
+      document.getElementById("location-input").value = "";
     }
   });
 
@@ -125,12 +138,33 @@ async function renderWeatherForecast(weeklyForecast) {
 
     // Update clone's elements
     clone.querySelector(".weather-details__date").textContent = day.date;
+
+    const currentTemp = clone.querySelector(".weather-deatails__current-temp");
+    currentTemp.textContent = day.temperature.current + celciusSymbol;
+    currentTemp.classList.add("temp-mild");
+    if (day.temperature.current > 30) {
+      currentTemp.classList.add("temp-hot");
+    }
+
+    if (day.temperature.current < 10) {
+      currentTemp.classList.add("temp-cold");
+    }
+
     clone.querySelector(".weather-details__temp").textContent =
       `Highest: ${day.temperature.highest}${celciusSymbol} / Lowest: ${day.temperature.lowest}${celciusSymbol}`;
-    clone.querySelector(".weather-details__phases").textContent =
-      `Morning: ${day.phases.morning}${celciusSymbol} / Afternoon: ${day.phases.afternoon}${celciusSymbol} / Evening: ${day.phases.evening}${celciusSymbol} / Night: ${day.phases.night}${celciusSymbol}`;
+
+    clone.querySelector(".morningImg").src =
+      `assets/icons/${day.phases.morning}.svg`;
+    clone.querySelector(".afternoonImg").src =
+      `assets/icons/${day.phases.afternoon}.svg`;
+    clone.querySelector(".eveningImg").src =
+      `assets/icons/${day.phases.evening}.svg`;
+    clone.querySelector(".nightImg").src =
+      `assets/icons/${day.phases.night}.svg`;
+
     clone.querySelector(".weather-details__rain").textContent =
-      `Chance of rain: ${day.rain}`;
+      `Chance of rain: ${day.rain}%`;
+
     clone.querySelector(".weather-details__icon").src =
       `assets/icons/${day.icon}.svg`;
 
@@ -150,10 +184,10 @@ function getWeeklyForecast(data) {
         current: currentDay.temp,
       },
       phases: {
-        morning: currentDay.hours[7].temp,
-        afternoon: currentDay.hours[12].temp,
-        evening: currentDay.hours[18].temp,
-        night: currentDay.hours[22].temp,
+        morning: currentDay.hours[7].icon,
+        afternoon: currentDay.hours[12].icon,
+        evening: currentDay.hours[18].icon,
+        night: currentDay.hours[22].icon,
       },
       icon: currentDay.icon,
       rain: currentDay.precipprob,
