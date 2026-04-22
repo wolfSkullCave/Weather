@@ -1,0 +1,143 @@
+/* Global reset & base */
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #f0f4f8;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 2rem;
+}
+
+/* Search bar */
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.search-container form {
+    display: flex;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.search-container input {
+    border: none;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    flex: 1;
+}
+
+.search-container button {
+    background: #0077cc;
+    border: none;
+    color: #fff;
+    padding: 0 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.search-container button:hover {
+    background: #005fa3;
+}
+
+/* Location title */
+.locationTitle {
+    text-align: center;
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    color: #0077cc;
+    text-transform: capitalize;
+}
+
+/* Forecast grid */
+.forecast {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Forecast card */
+.weather-details__row {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+    text-align: center;
+}
+
+.weather-details__row:hover {
+    transform: translateY(-4px);
+}
+
+.weather-details__icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1rem;
+}
+
+.weather-details__date {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.weather-deatails__current-temp {
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Hot */
+.temp-hot {
+    color: #e63946;
+    background: #ffe5e5;
+}
+
+/* Cold */
+.temp-cold {
+    color: #0077cc;
+    background: #e6f2fa;
+}
+
+/* Mild */
+.temp-mild {
+    color: #2a9d8f;
+    background: #eafaf7;
+}
+
+.weather-details__temp {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.weather-details__phases {
+    font-size: 0.8rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.weather-details__rain {
+    font-weight: 500;
+    color: #0077cc;
+}
+
+.weather-details__phases img {
+    height: 1.2rem;
+    margin-top: 5px;
+}

@@ -34,13 +34,40 @@
       <h3 class="locationTitle">Location</h3>
       <div class="forecast" id="weatherWeek"></div>
     </div>
+
+    <!-- <div class="forcast">
+      forcast
+      <div class="forcast__headings forcast__grid">
+        div
+      </div>
+      <div class="forcast__details forcast__grid">details</div>
+    </div> -->
+
     <!-- Templates -->
     <template id="weekDetails">
       <div class="weather-details__row">
         <img class="weather-details__icon" src="" alt="Weather Icon" />
         <div class="weather-details__date">Date</div>
+        <div class="weather-deatails__current-temp">temp</div>
         <div class="weather-details__temp">Highest/Lowest tempreture</div>
-        <div class="weather-details__phases">Phases of the day</div>
+        <div class="weather-details__phases">
+          <div>
+            <span>Morning</span>
+            <img src="" alt="" class="morningImg" />
+          </div>
+          <div>
+            <span>Afternoon</span>
+            <img src="" alt="" class="afternoonImg" />
+          </div>
+          <div>
+            <span>Evening</span>
+            <img src="" alt="" class="eveningImg" />
+          </div>
+          <div>
+            <span>Evening</span>
+            <img src="" alt="" class="nightImg" />
+          </div>
+        </div>
         <div class="weather-details__rain">Chance of rain</div>
       </div>
     </template>

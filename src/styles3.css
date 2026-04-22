@@ -1,0 +1,10 @@
+.forcast__grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
+.forcast__grid .forcast__headings{
+    display: grid;
+    
+}
