@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Webpack Template</title>
+    <!-- <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    /> -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div id="app"></div>
+
+      <div class="search-container">
+        <form>
+          <input
+            type="text"
+            placeholder="Search.."
+            name="search"
+            id="location-input"
+          />
+          <button type="submit" id="location-btn">
+            <i class="fa fa-search"></i>
+          </button>
+        </form>
+      </div>
+
+      <div class="weatherWidget"></div>
+      <h3 class="locationTitle">Location</h3>
+      <div class="forecast" id="weatherWeek"></div>
+    </div>
+
+    <!-- <div class="forcast">
+      forcast
+      <div class="forcast__headings forcast__grid">
+        div
+      </div>
+      <div class="forcast__details forcast__grid">details</div>
+    </div> -->
+
+    <!-- Templates -->
+    <template id="weekDetails">
+      <div class="weather-details__row">
+        <img class="weather-details__icon" src="" alt="Weather Icon" />
+        <div class="weather-details__date">Date</div>
+        <div class="weather-deatails__current-temp">temp</div>
+        <div class="weather-details__temp">Highest/Lowest tempreture</div>
+        <div class="weather-details__phases">
+          <div>
+            <span>Morning</span>
+            <img src="" alt="" class="morningImg" />
+          </div>
+          <div>
+            <span>Afternoon</span>
+            <img src="" alt="" class="afternoonImg" />
+          </div>
+          <div>
+            <span>Evening</span>
+            <img src="" alt="" class="eveningImg" />
+          </div>
+          <div>
+            <span>Evening</span>
+            <img src="" alt="" class="nightImg" />
+          </div>
+        </div>
+        <div class="weather-details__rain">Chance of rain</div>
+      </div>
+    </template>
+  </body>
+</html>
